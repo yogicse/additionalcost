@@ -1,12 +1,22 @@
-#Ziffity AdditionalCost
 
-##Additional Cost For Pallet Product
+## Ziffity Additional Cost Module  
+This module sets the additional cost for every product specific of an attribute set as per configure from admin configuration.
 
-1. Add new attribute set - Pallet product
+## Installation
 
+To install the module use the following commands:
+```
+php bin/magento setup:upgrade
+php bin/magento setup:di:compile
+php bin/magento cache:flush
+```
 
-Upcoming 
+## Admin Configuration
 
-1. Make system configuration that will give us ability to set proper attribute set of products that are taken into calculation+ set the additional cost for every pallet item in basket.
+Stores->Configurations->ADDITIONAL SHIPPING COST-> Additional Cost
 
-2. Additional shipping price calculation formula looks like that: base method price + (additional cost * qty of items of given attr set id) 
+#### Fields
+
+1. Enable
+2. Choose Attribute Set
+3. Additional Cost

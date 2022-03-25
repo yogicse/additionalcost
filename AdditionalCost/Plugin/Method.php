@@ -67,10 +67,9 @@ class Method
         $qty = 0;
         foreach($allItems as $item)
         {
-
             $product = $item->getProduct();
             if((int)$product->getAttributeSetId() === $attributeSetId) {
-                $qty = $qty + (int)$item->getQty();
+                $qty += (int)$item->getQty();
             }
         }
 

@@ -22,7 +22,20 @@ class Config
      */
     public const XML_ADDITIONAL_SHIPPING_PRICE = 'additional_cost/additionalcost/cost';
 
+    /**
+     * @var bool
+     */
     public $isEnabled;
+
+     /**
+     * @var int
+     */
+    public $attributeSetId;
+
+     /**
+     * @var bool
+     */
+    public $attributeSetPrice;
 
     /*
      * @var ScopeConfigInterface
@@ -54,7 +67,11 @@ class Config
      */
     public function getAdditionalCost(): string
     {
-        return (string) $this->scopeConfig->getValue(self::XML_ADDITIONAL_SHIPPING_PRICE);
+        if (!$this->attributeSetPrice) {
+            return (string) $this->scopeConfig->getValue(self::XML_ADDITIONAL_SHIPPING_PRICE);
+        }
+
+        return $this->attributeSetPrice;
     }
 
     /**
@@ -62,6 +79,11 @@ class Config
      */
     public function getAttributeSetId(): int
     {
-        return (int) $this->scopeConfig->getValue(self::XML_ATTRIBUTESET_ID);
+
+        if (!$this->attributeSetId) {
+            $attributeSetId = (int) $this->scopeConfig->getValue(self::XML_ATTRIBUTESET_ID);
+        }
+
+        return $this->attributeSetId;
     }
 }

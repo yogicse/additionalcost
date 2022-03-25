@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Ziffity\AdditionalCost\Plugin;
 
-use Ziffity\AdditionalCost\Model\Config as AdditonalCostConfig;
-use Magento\Checkout\Model\Cart;
+use Ziffity\AdditionalCost\Model\Config;
+use Magento\Checkout\Model\Session;
 
 class Method
 {
@@ -15,19 +15,22 @@ class Method
     protected $config;
 
     /**
-     * @var Cart
+     * @var Session
      */
-    protected $cart;
+    protected $checkoutSession;
 
     /**
-     * @param OptionFactory $optionFactory
+     * Undocumented function
+     *
+     * @param Config $config
+     * @param Session $checkoutSession
      */
     public function __construct(
-        AdditonalCostConfig $config,
-        Cart $cart
+        Config $config,
+        Session $checkoutSession
     ) {
         $this->config = $config;
-        $this->cart = $cart;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
@@ -38,7 +41,6 @@ class Method
      */
     public function beforeSetPrice($subject, $price)
     {
-
         if ($this->config->isEnabled()) {
             $finalPrice = 0;
             $additionCost = $this->config->getAdditionalCost();
@@ -46,31 +48,32 @@ class Method
             if (isset($attributeSetId) && ($additionCost > 0)) {
                 $totalQty = $this->getProductQtyByAttributeId($attributeSetId);
                 $finalPrice = $totalQty > 0 ? $totalQty * $additionCost : $finalPrice;
-                $price = $price + $finalPrice;
-            }            
+                $price +=  $finalPrice;
+            }
         }
 
         return $price;
     }
 
     /**
-     * Get Product QTy By AttributeSet Id in Basket
+     * Get Product Qty By AttributeSet Id in Basket
      *
      * @param int $attributeSetId
      * @return int
      */
     public function getProductQtyByAttributeId($attributeSetId) : int
     {
-        $cartItems = $this->cart->getQuote()->getAllItems();
+        $allItems = $this->checkoutSession->getQuote()->getAllItems();
         $qty = 0;
-        foreach($cartItems as $item)
+        foreach($allItems as $item)
         {
-            $product = $item->getProduct();      
-            if($product->getAttributeSetId() == $attributeSetId) {
-                $qty++;
+            $this->log($item->getProductId());
+            $product = $item->getProduct();
+            if((int)$product->getAttributeSetId() === $attributeSetId) {
+                $qty = $qty + (int)$item->getQty();
             }
         }
-    
+
        return $qty;
     }
 }

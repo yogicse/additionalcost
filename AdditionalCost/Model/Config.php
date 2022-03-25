@@ -68,7 +68,7 @@ class Config
     public function getAdditionalCost(): string
     {
         if (!$this->attributeSetPrice) {
-            return (string) $this->scopeConfig->getValue(self::XML_ADDITIONAL_SHIPPING_PRICE);
+            $this->attributeSetPrice = (string) $this->scopeConfig->getValue(self::XML_ADDITIONAL_SHIPPING_PRICE);
         }
 
         return $this->attributeSetPrice;
@@ -81,7 +81,7 @@ class Config
     {
 
         if (!$this->attributeSetId) {
-            $attributeSetId = (int) $this->scopeConfig->getValue(self::XML_ATTRIBUTESET_ID);
+           return $attributeSetId = (int) $this->scopeConfig->getValue(self::XML_ATTRIBUTESET_ID);
         }
 
         return $this->attributeSetId;
